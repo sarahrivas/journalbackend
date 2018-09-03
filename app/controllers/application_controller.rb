@@ -17,12 +17,13 @@ class ApplicationController < ActionController::API
       rescue JWT::DecodeError
           nil
       end
+    end
   end
 
   def current_user
-    if decode_token
+    if decoded_token
       user_id = decoded_token[0]['user_id']
-      @user = User.find_by (id: user_id)
+      @user = User.find_by id: user_id
     end
   end
 
@@ -31,7 +32,7 @@ class ApplicationController < ActionController::API
   end
 
   def authorized
-    render json: { message: 'Please log in', status: :unauthorized unless logged_in}
+    render json: { message: 'Please log in'}, status: :unauthorized unless logged_in
   end
 
 end
