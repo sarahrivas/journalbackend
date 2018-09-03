@@ -7,7 +7,7 @@ skip_before_action :authorized, only: %i[create]
       token = encode_token(user_id: @user_id)
       render json: { user: UserSerializer.new(@user), jwt:token }, status: :accepted
     else
-      render json: { message: 'Invalid username or password' }, status: 401
+      render json: { message: 'Invalid username or password' }, status: :unauthorized
   end
 
   private

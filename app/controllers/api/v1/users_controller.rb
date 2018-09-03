@@ -3,7 +3,7 @@ skip_before_action :authorized, only: %i[create]
 before_action :set_user, only: [:show, :update, :destroy]
 
   def profile
-      logged_in ? (render json: { user: UserSerializer.new(current_user) }, status: :accepted) : (render json:{ message: 'User not found' }, status: :not_found)
+      render json: { user: UserSerializer.new(current_user) }, status: :accepted
   end
 
   def create
