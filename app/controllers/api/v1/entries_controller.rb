@@ -3,7 +3,7 @@ class Api::V1::EntriesController < ApplicationController
 
   def index
     @entries = Entry.all.with_attached_images
-    render json: entries, status: 200
+    render json: @entries, status: 200
   end
 
   def create
