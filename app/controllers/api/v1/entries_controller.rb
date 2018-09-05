@@ -7,9 +7,9 @@ class Api::V1::EntriesController < ApplicationController
   end
 
   def create
-    entry = Entry.create! params.require(:entry).permit(:title, :content)
-    entry.images.attach(params[:entry][:images])
-    redirect_to message
+    entry = Entry.create! params.require(:entry).permit(:title, :content, :user_id)
+    # entry.images.attach(params[:entry][:images])
+    # redirect_to message
     render json: entry, status: 201
   end
 
