@@ -1,5 +1,6 @@
 class Api::V1::EntriesController < ApplicationController
   before_action :set_entry, only: [:show,:update,:destroy]
+  before_action :set_storage_url, only: [:create, :show]
 
   def index
     @entries = Entry.all.with_attached_images
@@ -7,10 +8,15 @@ class Api::V1::EntriesController < ApplicationController
   end
 
   def create
-    entry = Entry.create! params.require(:entry).permit(:title, :content, :user_id)
+    @entry = Entry.create(entry_params)
     # entry.images.attach(params[:entry][:images])
     # redirect_to message
-    render json: entry, status: 201
+    render json: {
+      title: @entry.title,
+      url: @entry.image.service_url,
+      content: @entry.content,
+      user_id: @entry.user.id
+    }, status: 200
   end
 
   def update
@@ -19,7 +25,13 @@ class Api::V1::EntriesController < ApplicationController
   end
 
   def show
-    render json: @entry, status: 200
+    @entry = Entry.find(params[:id])
+    render json: {
+      title: @entry.title,
+      url: @entry.image.service_url,
+      content: @entry.content,
+      user_id: @entry.user.id
+      }, status: 200
   end
 
   def destroy
@@ -30,11 +42,14 @@ class Api::V1::EntriesController < ApplicationController
 
 private
     def entry_params
-      params.permit(:title, :content, :user_id)
+      params.permit(:title, :content, :user_id, :image)
     end
 
     def set_entry
       @entry = Entry.find(params[:id])
     end
 
+    def set_storage_url
+      ActiveStorage :: Current.host = request.base_url
+    end
 end
