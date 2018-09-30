@@ -3,7 +3,7 @@ class Api::V1::EntriesController < ApplicationController
   before_action :set_storage_url, only: [:create, :show]
 
   def index
-    @entries = Entry.all.with_attached_images
+    @entries = Entry.all
     render json: @entries, status: 200
   end
 
@@ -15,7 +15,7 @@ class Api::V1::EntriesController < ApplicationController
       title: @entry.title,
       url: @entry.image.service_url,
       content: @entry.content,
-      user_id: @entry.user.id
+      user_id: @entry.user_id
     }, status: 200
   end
 
@@ -50,6 +50,6 @@ private
     end
 
     def set_storage_url
-      ActiveStorage :: Current.host = request.base_url
+      ActiveStorage::Current.host = request.base_url
     end
 end
